@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "django==6.1",
+    "django-autoslug>=1.9.9",
     "markdown>=3.11.2",
     "psycopg[binary]>=3.3.7",
     "python-decouple>=3.8",
@@ -15,6 +16,8 @@ dependencies = [
 dev = [
     "colored>=2.3.2",
     "colorlog>=6.12.0",
+    "pytest>=9.2.0",
+    "pytest-django>=4.14.0",
     "ruff>=0.17.3",
 ]
 
