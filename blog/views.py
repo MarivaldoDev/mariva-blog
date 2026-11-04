@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, render
 
-# Create your views here.
+from .models import Post
+
+
+def home(request: HttpRequest) -> HttpResponse:
+    post = get_object_or_404(Post, slug="primeir-post")
+    return render(request, "home.html", {"post": post})

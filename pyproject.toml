@@ -6,6 +6,41 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "django==6.1",
+    "markdown>=3.11.2",
     "psycopg[binary]>=3.3.7",
     "python-decouple>=3.8",
 ]
+
+[dependency-groups]
+dev = [
+    "colored>=2.3.2",
+    "colorlog>=6.12.0",
+    "ruff>=0.17.3",
+]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 88
+extend-exclude = ["*/migrations/*.py"]
+
+[tool.ruff.lint]
+select = [
+    "E4",
+    "E7",
+    "E9",
+    "F",
+    "I",
+    "B",
+    "UP",
+    "DJ",
+    "RUF",
+]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["blog", "project"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"

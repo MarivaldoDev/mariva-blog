@@ -1,0 +1,7 @@
+{% load markdown_filters %}
+
+<h1>{{ post.title }}</h1>
+
+<article class="post-content">
+    {{ post.content|render_markdown }}
+</article>
