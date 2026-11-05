@@ -5,5 +5,10 @@ from .models import Post
 
 
 def home(request: HttpRequest) -> HttpResponse:
-    post = get_object_or_404(Post, slug="primeir-post")
-    return render(request, "home.html", {"post": post})
+    posts = Post.objects.all().order_by("-created_at")
+    return render(request, "home.html", {"posts": posts})
+
+
+def post_detail(request: HttpRequest, slug: str, post_slug: str) -> HttpResponse:
+    post = get_object_or_404(Post, slug=post_slug, category__slug=slug)
+    return render(request, "post_detail.html", {"post": post})

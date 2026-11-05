@@ -27,4 +27,3 @@ class CategoryModelTest(TestBase):
     def test_category_name_cant_lenght_exceed_100_characters(self):
         with self.assertRaises(DataError):
             self.make_category(name="a" * 101)
-        

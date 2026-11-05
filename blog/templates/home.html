@@ -1,7 +1,21 @@
-{% load markdown_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mariva Blog</title>
+</head>
+<body>
+    <h1>Últimos Posts</h1>
+    <h2><a href="{% url 'create_post' %}"> Criar Post</a></h2>
 
-<h1>{{ post.title }}</h1>
-
-<article class="post-content">
-    {{ post.content|render_markdown }}
-</article>
+    {% if posts %}
+        {% for post in posts %}
+            <a href="{% url 'post_detail' post.category post.slug %}">{{ post.title }}</a>
+            <br>
+        {% endfor %}
+    {% else %}
+        <p>You don't have posts</p>
+    {% endif %}
+</body>
+</html>

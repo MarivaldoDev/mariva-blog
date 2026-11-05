@@ -1,0 +1,25 @@
+{% load markdown_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/github-dark.min.css">
+
+    <title>Document</title>
+</head>
+<body>
+    <a href="{% url 'home' %}">Home</a>
+    
+    <article class="post-content">
+        {{ post.content|render_markdown }}
+    </article>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js"></script>
+
+    <script>
+        hljs.highlightAll();
+    </script>
+</body>
+</html>
