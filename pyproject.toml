@@ -7,7 +7,9 @@ requires-python = ">=3.14"
 dependencies = [
     "django==6.1",
     "django-autoslug>=1.9.9",
+    "django-debug-toolbar>=8.0.0",
     "markdown>=3.11.2",
+    "martor>=1.8.5",
     "psycopg[binary]>=3.3.7",
     "python-decouple>=3.8",
 ]

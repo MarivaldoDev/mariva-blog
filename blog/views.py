@@ -5,10 +5,12 @@ from .models import Post
 
 
 def home(request: HttpRequest) -> HttpResponse:
-    posts = Post.objects.all().order_by("-created_at")
-    return render(request, "home.html", {"posts": posts})
+    last_posts = Post.objects.select_related("category").order_by("-created_at")[:5]
+    return render(request, "home.html", {"last_posts": last_posts})
 
 
-def post_detail(request: HttpRequest, slug: str, post_slug: str) -> HttpResponse:
-    post = get_object_or_404(Post, slug=post_slug, category__slug=slug)
+def post_detail(
+    request: HttpRequest, category_slug: str, post_slug: str
+) -> HttpResponse:
+    post = get_object_or_404(Post, slug=post_slug, category__slug=category_slug)
     return render(request, "post_detail.html", {"post": post})

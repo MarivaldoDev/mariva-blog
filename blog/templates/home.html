@@ -7,10 +7,9 @@
 </head>
 <body>
     <h1>Últimos Posts</h1>
-    <h2><a href="{% url 'create_post' %}"> Criar Post</a></h2>
 
-    {% if posts %}
-        {% for post in posts %}
+    {% if last_posts %}
+        {% for post in last_posts %}
             <a href="{% url 'post_detail' post.category post.slug %}">{{ post.title }}</a>
             <br>
         {% endfor %}
