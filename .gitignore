@@ -109,6 +109,13 @@ media/
 *.pid
 
 staticfiles/
+node_modules/
+# The admin serves the generated CodeMirror assets from this directory.
+!blog/static/
+!blog/static/blog/
+!blog/static/blog/dist/
+!blog/static/blog/dist/*
+CLAUDE.md
 # Ignore Django Migrations in Development if you are working on team
 
 # Only for Development only
