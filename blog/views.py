@@ -1,12 +1,17 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
 
-from .models import Post
+from .models import Category, Post
 
 
 def home(request: HttpRequest) -> HttpResponse:
-    last_posts = Post.objects.select_related("category").order_by("-created_at")[:5]
-    return render(request, "home.html", {"last_posts": last_posts})
+    last_posts = Post.objects.select_related("category").order_by("-created_at")[:12]
+    categories = Category.objects.order_by("name").prefetch_related("posts")
+    return render(
+        request,
+        "home.html",
+        {"last_posts": last_posts, "categories": categories},
+    )
 
 
 def post_detail(
