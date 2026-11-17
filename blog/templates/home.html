@@ -1,20 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mariva Blog</title>
-</head>
-<body>
-    <h1>Últimos Posts</h1>
+{% extends "base.html" %}
 
-    {% if last_posts %}
-        {% for post in last_posts %}
-            <a href="{% url 'post_detail' post.category post.slug %}">{{ post.title }}</a>
-            <br>
-        {% endfor %}
-    {% else %}
-        <p>You don't have posts</p>
-    {% endif %}
-</body>
-</html>
+{% block title %}Mariva Blog — Tecnologia em português{% endblock %}
+
+{% block content %}
+    <section class="intro">
+        <p class="eyebrow">Tecnologia em português</p>
+        <h1>Aprenda, construa e compartilhe.</h1>
+        <p>Artigos práticos sobre desenvolvimento, inteligência artificial, dados, ferramentas e tudo que ajuda a transformar ideias em produtos.</p>
+    </section>
+
+    <div class="content-grid">
+        <section class="posts-section" id="artigos">
+            <div class="section-heading">
+                <h2>Artigos mais recentes</h2>
+                <span>{{ last_posts|length }} publicação{{ last_posts|length|pluralize }}</span>
+            </div>
+            {% if last_posts %}
+                <ol class="post-list">
+                    {% for post in last_posts %}
+                        <li>
+                            <a class="post-link" href="{% url 'post_detail' post.category.slug post.slug %}">
+                                <span class="post-index">{{ forloop.counter|stringformat:"02d" }}</span>
+                                <span class="post-info">
+                                    <strong>{{ post.title }}</strong>
+                                    <small>{{ post.category.name }} · {{ post.created_at|date:"d M Y" }}</small>
+                                </span>
+                                <span class="post-arrow" aria-hidden="true">↗</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% else %}
+                <div class="empty-state">Novos artigos estão a caminho. Volte em breve.</div>
+            {% endif %}
+        </section>
+
+        <aside class="category-sidebar" id="categorias">
+            <h2>Explorar por tema</h2>
+            {% if categories %}
+                <div class="category-list">
+                    {% for category in categories %}
+                        <div class="category-group">
+                            <strong>{{ category.name }}</strong>
+                            <span>{{ category.posts.count }} artigo{{ category.posts.count|pluralize }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="muted">As categorias aparecerão aqui conforme o blog crescer.</p>
+            {% endif %}
+        </aside>
+    </div>
+
+    <section class="about-strip" id="sobre">
+        <h2>Um blog para quem<br>faz tecnologia.</h2>
+        <p>O Mariva Blog reúne experiências e aprendizados sobre tecnologia em geral, com conteúdo direto para você copiar, testar e adaptar aos seus projetos.</p>
+    </section>
+{% endblock %}

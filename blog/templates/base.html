@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mariva Blog — ideias, ferramentas e tendências que movem a tecnologia.">
+    <title>{% block title %}Mariva Blog{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,MONO@-15..0,300..900,0..1,0..1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="page-shell">
+        <header class="site-header">
+            <a class="brand" href="{% url 'home' %}" aria-label="Mariva Blog, página inicial">
+                <span class="brand-mark">M</span>
+                <span><strong>mariva blog</strong><small>tecnologia em português</small></span>
+            </a>
+            <nav class="site-nav" aria-label="Navegação principal">
+                <a href="{% url 'home' %}#artigos">Artigos</a>
+                <a href="{% url 'home' %}#categorias">Categorias</a>
+                <a href="{% url 'home' %}#sobre">Sobre</a>
+            </nav>
+        </header>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="site-footer">
+            <a class="brand" href="{% url 'home' %}"><span class="brand-mark">M</span><span><strong>mariva blog</strong><small>tecnologia em português</small></span></a>
+            <p>Ideias, ferramentas e contexto para quem constrói.</p>
+            <span class="footer-copy">© {% now "Y" %} Mariva Blog</span>
+        </footer>
+    </div>
+</body>
+</html>

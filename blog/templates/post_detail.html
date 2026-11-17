@@ -1,25 +1,29 @@
+{% extends "base.html" %}
 {% load markdown_filters %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+{% block title %}{{ post.title }} — Mariva Blog{% endblock %}
+
+{% block extra_head %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/github-dark.min.css">
+{% endblock %}
 
-    <title>Document</title>
-</head>
-<body>
-    <a href="{% url 'home' %}">Home</a>
-    
-    <article class="post-content">
-        {{ post.content|render_markdown }}
-    </article>
+{% block content %}
+    <header class="article-header">
+        <span class="eyebrow">{{ post.category }}</span>
+        <h1>{{ post.title }}</h1>
+        <div class="article-meta">Publicado em {{ post.created_at|date:"d \d\e F \d\e Y" }} · atualizado em {{ post.updated_at|date:"d M Y" }}</div>
+    </header>
 
+    <div class="article-layout">
+        <article class="post-content">
+            {{ post.content|render_markdown }}
+        </article>
+        <aside class="article-aside">
+            <a class="back-link" href="{% url 'home' %}">← Todos os artigos</a>
+            <p>Uma leitura do Mariva Blog sobre tecnologia, produto e as ideias por trás do código.</p>
+        </aside>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js"></script>
-
-    <script>
-        hljs.highlightAll();
-    </script>
-</body>
-</html>
+    <script>hljs.highlightAll();</script>
+{% endblock %}

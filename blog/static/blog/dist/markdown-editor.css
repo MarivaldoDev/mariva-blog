@@ -1,0 +1,73 @@
+/* frontend/css/markdown-editor.css */
+.markdown-editor {
+  overflow: hidden;
+  background: #282c34;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.markdown-editor .cm-editor {
+  color: #abb2bf;
+  background: #282c34;
+  min-height: 600px;
+  font-family: JetBrains Mono, monospace;
+  font-size: 14px;
+}
+
+.markdown-editor .cm-editor.cm-focused {
+  outline: 1px solid #388bfd;
+}
+
+.markdown-editor .cm-scroller {
+  overflow: auto;
+  font-family: JetBrains Mono, monospace;
+}
+
+.markdown-editor .cm-content {
+  caret-color: #528bff;
+  padding: 16px 0;
+  line-height: 1.8;
+}
+
+.markdown-editor .cm-gutters {
+  color: #636d83 !important;
+  background: #21252b !important;
+  border-right: 1px solid #30363d !important;
+}
+
+.markdown-editor .cm-lineNumbers .cm-gutterElement {
+  min-width: 40px;
+  padding: 0 12px 0 8px;
+}
+
+.markdown-editor .cm-activeLine {
+  background: #2c313a !important;
+}
+
+.markdown-editor .cm-activeLineGutter {
+  color: #abb2bf !important;
+  background: #2c313a !important;
+}
+
+.markdown-editor .cm-selectionBackground, .markdown-editor .cm-focused .cm-selectionBackground {
+  background: #3e4451 !important;
+}
+
+.markdown-editor .cm-cursor {
+  border-left-color: #528bff !important;
+}
+
+.markdown-editor .cm-scroller::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.markdown-editor .cm-scroller::-webkit-scrollbar-thumb {
+  background: #454c59;
+  border-radius: 6px;
+}
+
+.markdown-editor .cm-scroller::-webkit-scrollbar-track {
+  background: #21252b;
+}
