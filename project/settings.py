@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "debug_toolbar",
-    "martor",
     "blog",
+    "dashboard",
 ]
 
 MIDDLEWARE = [
@@ -147,6 +147,3 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
-
-# Choose your preferred theme: "bootstrap" or "semantic"
-MARTOR_THEME = "semantic"  # Default

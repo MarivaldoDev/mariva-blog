@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Mariva Blog{% endblock %}
+
+{% block content %}
+    <section class="dashboard-heading">
+        <div>
+            <p class="eyebrow">Área editorial</p>
+            <h1>Painel</h1>
+        </div>
+        <a class="dashboard-primary-button" href="{% url 'dashboard:create_post' %}">
+            <span aria-hidden="true">+</span> Novo post
+        </a>
+    </section>
+
+    <section class="dashboard-stats" aria-label="Resumo do blog">
+        <article class="stat-card">
+            <span class="stat-label">Publicações</span>
+            <strong>{{ post_count }}</strong>
+            <small>Posts publicados</small>
+        </article>
+        <article class="stat-card">
+            <span class="stat-label">Categorias</span>
+            <strong>{{ category_count }}</strong>
+            <small>Temas disponíveis</small>
+        </article>
+        <article class="stat-card stat-card-accent">
+            <span class="stat-label">Status</span>
+            <strong>Ativo</strong>
+            <small>Dashboard online</small>
+        </article>
+    </section>
+
+    <section class="dashboard-posts">
+        <div class="section-heading">
+            <h2>Posts recentes</h2>
+            <span>{{ posts|length }} exibido{{ posts|length|pluralize }}</span>
+        </div>
+
+        {% if posts %}
+            <div class="dashboard-post-table">
+                <div class="dashboard-table-header" aria-hidden="true">
+                    <span>Título</span>
+                    <span>Categoria</span>
+                    <span>Atualizado</span>
+                </div>
+                {% for post in posts %}
+                    <article class="dashboard-post-row">
+                        <a class="dashboard-post-title" href="{% url 'blog:post_detail' post.category.slug post.slug %}">
+                            <strong>{{ post.title }}</strong>
+                            <small>{{ post.created_at|date:"d/m/Y" }}</small>
+                        </a>
+                        <span class="dashboard-category">{{ post.category.name }}</span>
+                        <time datetime="{{ post.updated_at|date:'c' }}">{{ post.updated_at|timesince }} atrás</time>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                Nenhum post publicado ainda.
+                <a href="{% url 'dashboard:create_post' %}">Crie o primeiro post</a>.
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
