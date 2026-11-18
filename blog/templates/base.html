@@ -15,14 +15,14 @@
 <body>
     <div class="page-shell">
         <header class="site-header">
-            <a class="brand" href="{% url 'home' %}" aria-label="Mariva Blog, página inicial">
+            <a class="brand" href="{% url 'blog:home' %}" aria-label="Mariva Blog, página inicial">
                 <span class="brand-mark">M</span>
                 <span><strong>mariva blog</strong><small>tecnologia em português</small></span>
             </a>
             <nav class="site-nav" aria-label="Navegação principal">
-                <a href="{% url 'home' %}#artigos">Artigos</a>
-                <a href="{% url 'home' %}#categorias">Categorias</a>
-                <a href="{% url 'home' %}#sobre">Sobre</a>
+                <a href="{% url 'dashboard:index' %}">Dashboard</a>
+                <a href="{% url 'blog:home' %}#categorias">Categorias</a>
+                <a href="{% url 'blog:home' %}#sobre">Sobre</a>
             </nav>
         </header>
 
@@ -31,7 +31,7 @@
         </main>
 
         <footer class="site-footer">
-            <a class="brand" href="{% url 'home' %}"><span class="brand-mark">M</span><span><strong>mariva blog</strong><small>tecnologia em português</small></span></a>
+            <a class="brand" href="{% url 'blog:home' %}"><span class="brand-mark">M</span><span><strong>mariva blog</strong><small>tecnologia em português</small></span></a>
             <p>Ideias, ferramentas e contexto para quem constrói.</p>
             <span class="footer-copy">© {% now "Y" %} Mariva Blog</span>
         </footer>

@@ -19,7 +19,7 @@
                 <ol class="post-list">
                     {% for post in last_posts %}
                         <li>
-                            <a class="post-link" href="{% url 'post_detail' post.category.slug post.slug %}">
+                            <a class="post-link" href="{% url 'blog:post_detail' post.category.slug post.slug %}">
                                 <span class="post-index">{{ forloop.counter|stringformat:"02d" }}</span>
                                 <span class="post-info">
                                     <strong>{{ post.title }}</strong>

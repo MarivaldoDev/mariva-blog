@@ -1,6 +1,5 @@
 from autoslug import AutoSlugField
 from django.db import models
-from martor.models import MartorField
 
 
 class Category(models.Model):
@@ -24,7 +23,7 @@ class Post(models.Model):
         max_length=250,
         always_update=True,
     )  # type: ignore
-    content = MartorField()
+    content = models.TextField()
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="posts"
     )
