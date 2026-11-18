@@ -54,6 +54,66 @@ const codeLanguages = (info) => {
     return languages[language] ?? null;
 };
 
+let previewRequest;
+
+function updateMarkdownPreview(content) {
+    const preview = document.querySelector(".markdown-preview");
+    const previewUrl = window.MARKDOWN_PREVIEW_URL;
+
+    if (!preview || !previewUrl) {
+        return;
+    }
+
+    window.clearTimeout(previewRequest);
+    previewRequest = window.setTimeout(async () => {
+        const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+
+        try {
+            const response = await fetch(previewUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+                    "X-CSRFToken": csrfInput?.value ?? "",
+                },
+                body: new URLSearchParams({ content }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Não foi possível gerar a prévia.");
+            }
+
+            const data = await response.json();
+            preview.innerHTML = data.html || '<p class="markdown-preview-empty">A prévia aparecerá aqui enquanto você escreve.</p>';
+        } catch (error) {
+            preview.innerHTML = `<p class="markdown-preview-empty">${error.message}</p>`;
+        }
+    }, 180);
+}
+
+function setupMarkdownPreview(textarea, editor) {
+    const workbench = document.querySelector(".markdown-workbench");
+    const modeButtons = document.querySelectorAll("[data-editor-mode]");
+
+    modeButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const mode = button.dataset.editorMode;
+            workbench.dataset.mode = mode;
+            modeButtons.forEach((item) => item.classList.toggle("active", item === button));
+            editor.requestMeasure();
+
+            if (mode !== "edit") {
+                updateMarkdownPreview(editor.state.doc.toString());
+            }
+        });
+    });
+
+    textarea.form?.addEventListener("submit", () => {
+        textarea.value = editor.state.doc.toString();
+    });
+
+    updateMarkdownPreview(editor.state.doc.toString());
+}
+
 function initializeMarkdownEditor() {
     const textarea = document.querySelector(
         'textarea[name="content"]'
@@ -78,15 +138,14 @@ function initializeMarkdownEditor() {
             EditorView.updateListener.of((update) => {
                 if (update.docChanged) {
                     textarea.value = update.state.doc.toString();
+                    updateMarkdownPreview(update.state.doc.toString());
                 }
             }),
         ],
         parent: container,
     });
 
-    textarea.form?.addEventListener("submit", () => {
-        textarea.value = editor.state.doc.toString();
-    });
+    setupMarkdownPreview(textarea, editor);
 
     textarea.dataset.codemirrorInitialized = "true";
     textarea.style.display = "none";
