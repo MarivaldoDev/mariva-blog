@@ -1,0 +1,42 @@
+<aside class="dashboard-sidebar">
+    <a class="dashboard-brand" href="{% url 'dashboard:index' %}">
+        <span class="dashboard-brand-mark">M</span>
+        <span>
+            <strong>mariva blog</strong>
+            <small>DASHBOARD</small>
+        </span>
+    </a>
+
+    <nav class="dashboard-nav" aria-label="Navegação do dashboard">
+        <span class="dashboard-nav-label">Conteúdo</span>
+        <a
+            class="dashboard-nav-link {% if request.resolver_match.url_name == 'index' %}dashboard-nav-link-active{% endif %}"
+            href="{% url 'dashboard:index' %}"
+        >
+            <span aria-hidden="true">▣</span>
+            Posts
+            <small>{{ post_count|default:"0" }}</small>
+        </a>
+        <a
+            class="dashboard-nav-link {% if request.resolver_match.url_name == 'create_post' %}dashboard-nav-link-active{% endif %}"
+            href="{% url 'dashboard:create_post' %}"
+        >
+            <span aria-hidden="true">＋</span>
+            Novo post
+        </a>
+
+        <span class="dashboard-nav-label dashboard-nav-label-spaced">Site</span>
+        <a class="dashboard-nav-link" href="{% url 'blog:home' %}">
+            <span aria-hidden="true">↗</span>
+            Ver o blog
+        </a>
+    </nav>
+
+    <div class="dashboard-user">
+        <span class="dashboard-user-avatar">{{ request.user.username|slice:":1"|upper }}</span>
+        <span>
+            <strong>{{ request.user.username }}</strong>
+            <small>staff member</small>
+        </span>
+    </div>
+</aside>

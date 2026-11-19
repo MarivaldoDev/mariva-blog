@@ -1,12 +1,13 @@
-{% extends "base.html" %}
+{% extends "dashboard/base_dashboard.html" %}
 
 {% block title %}Dashboard | Mariva Blog{% endblock %}
 
-{% block content %}
+{% block dashboard_content %}
     <section class="dashboard-heading">
         <div>
             <p class="eyebrow">Área editorial</p>
-            <h1>Painel</h1>
+            <h1>Posts</h1>
+            <p class="dashboard-heading-description">Crie, edite e publique artigos.</p>
         </div>
         <a class="dashboard-primary-button" href="{% url 'dashboard:create_post' %}">
             <span aria-hidden="true">+</span> Novo post

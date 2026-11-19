@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "dashboard/base_dashboard.html" %}
 {% load static %}
 
 {% block title %}Criar post | Mariva Blog{% endblock %}
@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% static 'blog/dist/markdown-editor.css' %}">
 {% endblock %}
 
-{% block content %}
+{% block dashboard_content %}
     <section class="dashboard-heading create-post-heading">
         <div>
             <p class="eyebrow">Nova publicação</p>
@@ -50,10 +50,26 @@
         <div class="form-field">
             <label for="{{ form.content.id_for_label }}">Conteúdo</label>
             <div class="markdown-toolbar" role="toolbar" aria-label="Modo do editor">
-                <button type="button" data-editor-mode="edit" class="markdown-mode">Editar</button>
-                <button type="button" data-editor-mode="preview" class="markdown-mode">Prévia</button>
+                <button
+                    type="button"
+                    data-editor-mode="edit"
+                    class="markdown-mode active"
+                    aria-pressed="true"
+                >
+                    Editar
+                </button>
+
+                <button
+                    type="button"
+                    data-editor-mode="preview"
+                    class="markdown-mode"
+                    aria-pressed="false"
+                >
+                    Prévia
+                </button>
             </div>
-            <div class="markdown-workbench" data-mode="split">
+
+            <div class="markdown-workbench" data-mode="edit">
                 {{ form.content }}
                 <aside class="markdown-preview post-content" aria-live="polite" aria-label="Prévia do post">
                     <p class="markdown-preview-empty">A prévia aparecerá aqui enquanto você escreve.</p>
