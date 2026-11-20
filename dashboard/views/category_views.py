@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 
-from ..forms import CategoryForm
+from ..forms.category_forms import CategoryForm
 
 
 def create_category(request):

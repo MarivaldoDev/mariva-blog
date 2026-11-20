@@ -10,7 +10,7 @@
     <nav class="dashboard-nav" aria-label="Navegação do dashboard">
         <span class="dashboard-nav-label">Conteúdo</span>
         <a
-            class="dashboard-nav-link {% if request.resolver_match.url_name == 'index' %}dashboard-nav-link-active{% endif %}"
+            class="dashboard-nav-link {% if request.resolver_match.url_name == 'index' or request.resolver_match.url_name == 'update_post' %}dashboard-nav-link-active{% endif %}"
             href="{% url 'dashboard:index' %}"
         >
             <span aria-hidden="true">▣</span>

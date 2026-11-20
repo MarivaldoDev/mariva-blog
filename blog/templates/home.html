@@ -42,7 +42,7 @@
                     {% for category in categories %}
                         <div class="category-group">
                             <strong>{{ category.name }}</strong>
-                            <span>{{ category.posts.count }} artigo{{ category.posts.count|pluralize }}</span>
+                            <span>{{ category.post_count }} artigo{{ category.post_count|pluralize }}</span>
                         </div>
                     {% endfor %}
                 </div>

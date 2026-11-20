@@ -117,6 +117,7 @@ node_modules/
 !blog/static/blog/dist/*
 CLAUDE.md
 plan.md
+blog_base.png
 # Ignore Django Migrations in Development if you are working on team
 
 # Only for Development only

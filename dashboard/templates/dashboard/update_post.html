@@ -1,0 +1,98 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block title %}Editar post | Mariva Blog{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'blog/dist/markdown-editor.css' %}">
+{% endblock %}
+
+{% block dashboard_content %}
+    <section class="dashboard-heading create-post-heading">
+        <div>
+            <p class="eyebrow">Editar publicação</p>
+            <h1>{{ post.title }}</h1>
+        </div>
+        <a class="dashboard-secondary-button" href="{% url 'dashboard:index' %}">Voltar ao painel</a>
+    </section>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="dashboard-alert" role="status">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if form.non_field_errors %}
+        <div class="dashboard-alert dashboard-alert-error" role="alert">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <form
+        class="create-post-form"
+        action="{% url 'dashboard:update_post' post.slug %}"
+        method="post"
+    >
+        {% csrf_token %}
+
+        <div class="form-field">
+            <label for="{{ form.title.id_for_label }}">Título</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <span class="field-error">{{ form.title.errors|striptags }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.category.id_for_label }}">Categoria</label>
+            {{ form.category }}
+            {% if form.category.errors %}
+                <span class="field-error">{{ form.category.errors|striptags }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.content.id_for_label }}">Conteúdo</label>
+            <div class="markdown-toolbar" role="toolbar" aria-label="Modo do editor">
+                <button
+                    type="button"
+                    data-editor-mode="edit"
+                    class="markdown-mode active"
+                    aria-pressed="true"
+                >
+                    Editar
+                </button>
+
+                <button
+                    type="button"
+                    data-editor-mode="preview"
+                    class="markdown-mode"
+                    aria-pressed="false"
+                >
+                    Prévia
+                </button>
+            </div>
+
+            <div class="markdown-workbench" data-mode="edit">
+                {{ form.content }}
+                <aside class="markdown-preview post-content" aria-live="polite" aria-label="Prévia do post">
+                    <p class="markdown-preview-empty">Clique em Prévia para visualizar o post.</p>
+                </aside>
+            </div>
+            <small>Escreva o texto em Markdown. Use # para títulos, ``` para blocos de código e - para listas.</small>
+            {% if form.content.errors %}
+                <span class="field-error">{{ form.content.errors|striptags }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-actions">
+            <a class="dashboard-secondary-button" href="{% url 'dashboard:index' %}">Cancelar</a>
+            <button class="dashboard-primary-button" type="submit">Salvar alterações</button>
+        </div>
+    </form>
+
+    <script>
+        window.MARKDOWN_PREVIEW_URL = "{% url 'dashboard:preview_post' %}";
+    </script>
+    <script src="{% static 'blog/dist/markdown-editor.js' %}" type="module"></script>
+{% endblock %}
