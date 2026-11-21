@@ -32,11 +32,13 @@ ALLOWED_TAGS = {
     "thead",
     "tr",
     "ul",
+    "img",
 }
 
 ALLOWED_ATTRIBUTES = {
     "a": {"href", "title"},
     "code": {"class"},
+    "img": {"src", "alt", "title"},
 }
 
 ALLOWED_URL_SCHEMES = {"http", "https", "mailto"}
