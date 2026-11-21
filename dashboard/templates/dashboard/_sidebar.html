@@ -24,6 +24,13 @@
             <span aria-hidden="true">＋</span>
             Novo post
         </a>
+        <a
+            class="dashboard-nav-link {% if request.resolver_match.url_name == 'create_category' %}dashboard-nav-link-active{% endif %}"
+            href="{% url 'dashboard:create_category' %}"
+        >
+            <span aria-hidden="true">＋</span>
+            Nova categoria
+        </a>
 
         <span class="dashboard-nav-label dashboard-nav-label-spaced">Site</span>
         <a class="dashboard-nav-link" href="{% url 'blog:home' %}">

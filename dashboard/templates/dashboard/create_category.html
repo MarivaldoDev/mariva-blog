@@ -1,0 +1,50 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}{% block page_title %}Criar categoria{% endblock %} | Mariva Blog{% endblock %}
+
+{% block dashboard_content %}
+    <section class="dashboard-heading create-post-heading">
+        <div>
+            <p class="eyebrow">{% block heading_eyebrow %}Organização do conteúdo{% endblock %}</p>
+            <h1>{% block heading_title %}Criar categoria{% endblock %}</h1>
+            <p class="dashboard-heading-description">
+                Adicione um novo tema para classificar seus posts.
+            </p>
+        </div>
+        <a class="dashboard-secondary-button" href="{% url 'dashboard:index' %}">
+            Voltar ao painel
+        </a>
+    </section>
+
+    {% if form.non_field_errors %}
+        <div class="dashboard-alert dashboard-alert-error" role="alert">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <form
+        class="create-post-form"
+        action="{% block form_action %}{% url 'dashboard:create_category' %}{% endblock %}"
+        method="post"
+    >
+        {% csrf_token %}
+
+        <div class="form-field">
+            <label for="{{ form.name.id_for_label }}">Nome da categoria</label>
+            {{ form.name }}
+            <small>Use um nome curto e fácil de identificar no blog.</small>
+            {% if form.name.errors %}
+                <span class="field-error">{{ form.name.errors|striptags }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-actions">
+            <a class="dashboard-secondary-button" href="{% url 'dashboard:index' %}">
+                Cancelar
+            </a>
+            <button class="dashboard-primary-button" type="submit">
+                {% block submit_label %}Criar categoria{% endblock %}
+            </button>
+        </div>
+    </form>
+{% endblock %}

@@ -1,7 +1,7 @@
 {% extends "dashboard/base_dashboard.html" %}
 {% load static %}
 
-{% block title %}Criar post | Mariva Blog{% endblock %}
+{% block title %}{% block page_title %}Criar post{% endblock %} | Mariva Blog{% endblock %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'blog/dist/markdown-editor.css' %}">
@@ -10,8 +10,8 @@
 {% block dashboard_content %}
     <section class="dashboard-heading create-post-heading">
         <div>
-            <p class="eyebrow">Nova publicação</p>
-            <h1>Criar post</h1>
+            <p class="eyebrow">{% block heading_eyebrow %}Nova publicação{% endblock %}</p>
+            <h1>{% block heading_title %}Criar post{% endblock %}</h1>
         </div>
         <a class="dashboard-secondary-button" href="{% url 'dashboard:index' %}">Voltar ao painel</a>
     </section>
@@ -28,7 +28,7 @@
         </div>
     {% endif %}
 
-    <form class="create-post-form" action="{% url 'dashboard:create_post' %}" method="post">
+    <form class="create-post-form" action="{% block form_action %}{% url 'dashboard:create_post' %}{% endblock %}" method="post">
         {% csrf_token %}
 
         <div class="form-field">
@@ -83,7 +83,9 @@
 
         <div class="form-actions">
             <a class="dashboard-secondary-button" href="{% url 'dashboard:index' %}">Cancelar</a>
-            <button class="dashboard-primary-button" type="submit">Publicar post</button>
+            <button class="dashboard-primary-button" type="submit">
+                {% block submit_label %}Publicar post{% endblock %}
+            </button>
         </div>
     </form>
 

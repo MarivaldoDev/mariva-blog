@@ -1,0 +1,7 @@
+{% extends "dashboard/create_category.html" %}
+
+{% block page_title %}Editar categoria{% endblock %}
+{% block heading_eyebrow %}Organização do conteúdo{% endblock %}
+{% block heading_title %}{{ category.name }}{% endblock %}
+{% block form_action %}{% url 'dashboard:update_category' category.slug %}{% endblock %}
+{% block submit_label %}Salvar alterações{% endblock %}
