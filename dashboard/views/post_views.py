@@ -47,7 +47,7 @@ def create_post(request):
 
 @staff_member_required
 @require_POST
-def preview_post(request):
+def preview_post(request) -> JsonResponse:
     content = request.POST.get("content", "")
     rendered = render_markdown(content)
     return JsonResponse({"html": rendered})

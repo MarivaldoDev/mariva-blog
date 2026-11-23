@@ -20,8 +20,7 @@ class CategoryForm(forms.ModelForm):
             return {}
 
         name = cleaned_data.get("name")
-        if name:
-            if Category.objects.filter(name=name).exists():
-                raise forms.ValidationError("A category with this name already exists.")
+        if name and Category.objects.filter(name=name).exists():
+            raise forms.ValidationError("A category with this name already exists.")
 
         return cleaned_data
