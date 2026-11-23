@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods, require_POST
@@ -12,16 +13,26 @@ from ..forms.post_forms import PostForm
 
 @staff_member_required
 def index(request):
+    search_query = request.GET.get("q", "").strip()
     posts = Post.objects.select_related("category").order_by("-created_at")
-    return render(
-        request,
-        "dashboard/index.html",
-        {
-            "posts": posts[:8],
-            "post_count": posts.count(),
-            "category_count": Category.objects.count(),
-        },
-    )
+
+    if search_query:
+        posts = posts.filter(
+            Q(title__icontains=search_query) | Q(category__name__icontains=search_query)
+        )
+
+    context = {
+        "posts": posts[:8],
+        "post_count": Post.objects.count(),
+        "category_count": Category.objects.count(),
+        "search_query": search_query,
+        "displayed_post_count": posts.count(),
+    }
+
+    if request.headers.get("HX-Request"):
+        return render(request, "dashboard/_post-results.html", context)
+
+    return render(request, "dashboard/index.html", context)
 
 
 @staff_member_required

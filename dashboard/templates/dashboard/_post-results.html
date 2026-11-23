@@ -1,0 +1,70 @@
+<section class="dashboard-posts">
+    <div class="section-heading">
+        <h2>Posts recentes</h2>
+        {% if search_query %}
+            <span>{{ displayed_post_count }} resultado{{ displayed_post_count|pluralize }} para "{{ search_query }}"</span>
+        {% else %}
+            <span>{{ posts|length }} exibido{{ posts|length|pluralize }}</span>
+        {% endif %}
+    </div>
+
+    {% if posts %}
+        <div class="dashboard-post-table">
+            <div class="dashboard-table-header" aria-hidden="true">
+                <span>Título</span>
+                <span>Categoria</span>
+                <span>Atualizado</span>
+                <span>Ações</span>
+            </div>
+            {% for post in posts %}
+                <article class="dashboard-post-row">
+                    <a class="dashboard-post-title" href="{% url 'dashboard:update_post' post.slug %}">
+                        <strong>{{ post.title }}</strong>
+                        <small>{{ post.created_at|date:"d/m/Y" }}</small>
+                    </a>
+                    <span class="dashboard-category">{{ post.category.name }}</span>
+                    <time datetime="{{ post.updated_at|date:'c' }}">{{ post.updated_at|timesince }} atrás</time>
+                    <div class="dashboard-post-actions">
+                        <a
+                            class="dashboard-action-button dashboard-action-edit"
+                            href="{% url 'dashboard:update_post' post.slug %}"
+                            aria-label="Editar {{ post.title }}"
+                            title="Editar post"
+                        >
+                            <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16">
+                                <path d="M15.6 4.5l3.9 3.9M4 20l4.1-.8L19.4 7.9a1.4 1.4 0 000-2l-1.3-1.3a1.4 1.4 0 00-2 0L5 15.2 4 20z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+                            </svg>
+                        </a>
+                        <form
+                            method="post"
+                            action="{% url 'dashboard:delete_post' post.slug %}"
+                            onsubmit="return confirm('Deseja realmente apagar este post?');"
+                        >
+                            {% csrf_token %}
+                            <button
+                                class="dashboard-action-button dashboard-action-delete"
+                                type="submit"
+                                aria-label="Apagar {{ post.title }}"
+                                title="Apagar post"
+                            >
+                                <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16">
+                                    <path d="M4 7h16M9 7V4h6v3m3 0l-1 13H7L6 7m4 4v5m4-5v5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            {% if search_query %}
+                Nenhum post encontrado para "{{ search_query }}".
+                <a href="{% url 'dashboard:index' %}">Limpar busca</a>.
+            {% else %}
+                Nenhum post publicado ainda.
+                <a href="{% url 'dashboard:create_post' %}">Crie o primeiro post</a>.
+            {% endif %}
+        </div>
+    {% endif %}
+</section>

@@ -1,3 +1,153 @@
-{% for category in categories %}
-    {{ category }} <br>
-{% endfor %}
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Categorias | Mariva Blog{% endblock %}
+
+{% block dashboard_content %}
+    <section class="dashboard-heading create-post-heading">
+        <div>
+            <p class="eyebrow">Organização do conteúdo</p>
+            <h1>Categorias</h1>
+            <p class="dashboard-heading-description">
+                Gerencie os temas usados pelos posts do blog.
+            </p>
+        </div>
+        <a class="dashboard-primary-button" href="{% url 'dashboard:create_category' %}">
+            <span aria-hidden="true">+</span> Nova categoria
+        </a>
+    </section>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="dashboard-alert" role="status">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <section class="dashboard-categories" aria-labelledby="categories-heading">
+        <div class="section-heading">
+            <h2 id="categories-heading">Todas as categorias</h2>
+            <span>{{ categories|length }} categoria{{ categories|length|pluralize }}</span>
+        </div>
+
+        {% if categories %}
+            <div class="dashboard-post-table dashboard-category-table">
+                <div class="dashboard-table-header" aria-hidden="true">
+                    <span>Nome</span>
+                    <span>Posts</span>
+                    <span>Ações</span>
+                </div>
+                {% for category in categories %}
+                    <article class="dashboard-post-row dashboard-category-row">
+                        <div class="dashboard-category-name">
+                            <strong>{{ category.name }}</strong>
+                            <small>/{{ category.slug }}/</small>
+                        </div>
+                        <span class="dashboard-category-count">
+                            {{ category.post_count }} post{{ category.post_count|pluralize }}
+                        </span>
+                        <div class="dashboard-post-actions">
+                            <button
+                                class="dashboard-action-button dashboard-action-delete category-delete-button"
+                                type="button"
+                                aria-label="Excluir categoria {{ category.name }}"
+                                title="Excluir categoria"
+                                data-category-name="{{ category.name }}"
+                                data-delete-action="{% url 'dashboard:delete_category' category.slug %}"
+                                data-post-count="{{ category.post_count }}"
+                                data-posts-template="category-posts-{{ category.slug }}"
+                            >
+                                <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16">
+                                    <path d="M4 7h16M9 7V4h6v3m3 0l-1 13H7L6 7m4 4v5m4-5v5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </article>
+
+                    <template id="category-posts-{{ category.slug }}">
+                        {% for post in category.posts.all %}
+                            <li>{{ post.title }}</li>
+                        {% endfor %}
+                    </template>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                Nenhuma categoria criada ainda.
+                <a href="{% url 'dashboard:create_category' %}">Crie a primeira categoria</a>.
+            </div>
+        {% endif %}
+    </section>
+
+    <dialog class="category-delete-dialog" id="category-delete-dialog">
+        <form method="dialog" class="category-delete-dialog-form">
+            <div class="category-delete-dialog-header">
+                <span class="category-delete-icon" aria-hidden="true">!</span>
+                <div>
+                    <p class="eyebrow">Confirmação necessária</p>
+                    <h2>Excluir categoria?</h2>
+                </div>
+            </div>
+
+            <p id="category-delete-description"></p>
+            <div id="category-delete-posts">
+                <strong>Posts que também serão excluídos:</strong>
+                <ul id="category-delete-post-list"></ul>
+            </div>
+
+            <div class="form-actions category-delete-actions">
+                <button class="dashboard-secondary-button" value="cancel" type="submit">
+                    Cancelar
+                </button>
+                <button class="dashboard-danger-button" id="confirm-category-delete" type="button">
+                    Excluir categoria e posts
+                </button>
+            </div>
+        </form>
+    </dialog>
+
+    <form id="category-delete-post-form" method="post">
+        {% csrf_token %}
+    </form>
+
+    <script>
+        const categoryDeleteDialog = document.getElementById("category-delete-dialog");
+        const categoryDeleteDescription = document.getElementById("category-delete-description");
+        const categoryDeletePostList = document.getElementById("category-delete-post-list");
+        const categoryDeletePosts = document.getElementById("category-delete-posts");
+        const categoryDeletePostForm = document.getElementById("category-delete-post-form");
+        let categoryToDelete = null;
+
+        document.querySelectorAll(".category-delete-button").forEach((button) => {
+            button.addEventListener("click", () => {
+                const categoryName = button.dataset.categoryName;
+                const postCount = Number(button.dataset.postCount);
+                const postsTemplate = document.getElementById(button.dataset.postsTemplate);
+
+                categoryToDelete = button.dataset.deleteAction;
+                categoryDeleteDescription.textContent =
+                    `A categoria "${categoryName}" será excluída permanentemente.`;
+
+                categoryDeletePostList.replaceChildren();
+                if (postCount > 0) {
+                    categoryDeletePosts.hidden = false;
+                    categoryDeletePostList.append(...postsTemplate.content.cloneNode(true).querySelectorAll("li"));
+                } else {
+                    categoryDeletePosts.hidden = true;
+                }
+
+                categoryDeleteDialog.showModal();
+            });
+        });
+
+        document.getElementById("confirm-category-delete").addEventListener("click", () => {
+            if (!categoryToDelete) return;
+            categoryDeletePostForm.action = categoryToDelete;
+            categoryDeletePostForm.submit();
+        });
+
+        categoryDeleteDialog.addEventListener("click", (event) => {
+            if (event.target === categoryDeleteDialog) {
+                categoryDeleteDialog.close();
+            }
+        });
+    </script>
+{% endblock %}
