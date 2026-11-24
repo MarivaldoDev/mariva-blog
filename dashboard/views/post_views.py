@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -21,12 +22,16 @@ def index(request):
             Q(title__icontains=search_query) | Q(category__name__icontains=search_query)
         )
 
+    paginator = Paginator(posts, 6)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
     context = {
-        "posts": posts[:8],
+        "posts": page_obj.object_list,
         "post_count": Post.objects.count(),
         "category_count": Category.objects.count(),
         "search_query": search_query,
         "displayed_post_count": posts.count(),
+        "page_obj": page_obj,
     }
 
     if request.headers.get("HX-Request"):

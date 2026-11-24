@@ -4,7 +4,7 @@
         {% if search_query %}
             <span>{{ displayed_post_count }} resultado{{ displayed_post_count|pluralize }} para "{{ search_query }}"</span>
         {% else %}
-            <span>{{ posts|length }} exibido{{ posts|length|pluralize }}</span>
+            <span>{{ page_obj.start_index }}-{{ page_obj.end_index }} de {{ page_obj.paginator.count }}</span>
         {% endif %}
     </div>
 
@@ -66,5 +66,54 @@
                 <a href="{% url 'dashboard:create_post' %}">Crie o primeiro post</a>.
             {% endif %}
         </div>
+    {% endif %}
+
+    {% if page_obj.paginator.num_pages > 1 %}
+        <nav class="dashboard-pagination" aria-label="Paginação de posts">
+            {% if page_obj.has_previous %}
+                <a
+                    class="dashboard-pagination-button"
+                    href="?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}page={{ page_obj.previous_page_number }}"
+                    hx-get="{% url 'dashboard:index' %}?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}page={{ page_obj.previous_page_number }}"
+                    hx-target="#dashboard-post-results"
+                    hx-swap="innerHTML"
+                    hx-push-url="true"
+                >
+                    Anterior
+                </a>
+            {% endif %}
+
+            {% for page_number in page_obj.paginator.page_range %}
+                {% if page_number == page_obj.number %}
+                    <span class="dashboard-pagination-current" aria-current="page">
+                        {{ page_number }}
+                    </span>
+                {% else %}
+                    <a
+                        class="dashboard-pagination-button"
+                        href="?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}page={{ page_number }}"
+                        hx-get="{% url 'dashboard:index' %}?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}page={{ page_number }}"
+                        hx-target="#dashboard-post-results"
+                        hx-swap="innerHTML"
+                        hx-push-url="true"
+                    >
+                        {{ page_number }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a
+                    class="dashboard-pagination-button"
+                    href="?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}page={{ page_obj.next_page_number }}"
+                    hx-get="{% url 'dashboard:index' %}?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}page={{ page_obj.next_page_number }}"
+                    hx-target="#dashboard-post-results"
+                    hx-swap="innerHTML"
+                    hx-push-url="true"
+                >
+                    Próxima
+                </a>
+            {% endif %}
+        </nav>
     {% endif %}
 </section>

@@ -4,7 +4,7 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
-from blog.models import Category
+from blog.models import Category, Post
 
 from ..forms.category_forms import CategoryForm
 
@@ -36,7 +36,7 @@ def create_category(request):
 @require_http_methods(["POST", "DELETE"])
 def delete_category(request, slug: str):
     category = get_object_or_404(Category, slug=slug)
-    deleted_posts_count = category.posts.count()
+    deleted_posts_count = Post.objects.filter(category=category).count()
     deleted_category_name = category.name
     category.delete()
 
