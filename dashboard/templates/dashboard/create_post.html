@@ -28,32 +28,24 @@
         </div>
     {% endif %}
 
-    <form class="create-post-form" action="{% block form_action %}{% url 'dashboard:create_post' %}{% endblock %}" method="post" enctype="multipart/form-data">
+    <form
+        class="create-post-form"
+        action="{% block form_action %}{% url 'dashboard:create_post' %}{% endblock %}"
+        method="post"
+        enctype="multipart/form-data"
+        data-markdown-preview-url="{% url 'dashboard:preview_post' %}"
+    >
         {% csrf_token %}
 
-        <div class="form-field">
-            <label for="{{ form.image.id_for_label }}">Imagem</label>
-            {% if post.image %}
-                <div class="post-image-preview">
-                    <img src="{{ post.image.url }}" alt="Imagem atual de {{ post.title }}">
-                </div>
-            {% endif %}
-            {{ form.image }}
-            <small>Opcional. Selecione uma imagem em formato JPG, PNG ou WebP.</small>
-            {% if form.image.errors %}
-                <span class="field-error">{{ form.image.errors|striptags }}</span>
-            {% endif %}
-        </div>
+        <div class="create-post-main">
+            <div class="form-field">
+                <label for="{{ form.title.id_for_label }}">Título</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <span class="field-error">{{ form.title.errors|striptags }}</span>
+                {% endif %}
+            </div>
 
-        <div class="form-field">
-            <label for="{{ form.title.id_for_label }}">Título</label>
-            {{ form.title }}
-            {% if form.title.errors %}
-                <span class="field-error">{{ form.title.errors|striptags }}</span>
-            {% endif %}
-        </div>
-
-        <div class="form-field-grid">
             <div class="form-field">
                 <label for="{{ form.category.id_for_label }}">Categoria</label>
                 {{ form.category }}
@@ -63,70 +55,98 @@
             </div>
 
             <div class="form-field">
-                <label for="{{ form.status.id_for_label }}">Status</label>
-                {{ form.status }}
+                <label for="{{ form.content.id_for_label }}">Conteúdo</label>
+                <div class="markdown-toolbar" role="toolbar" aria-label="Modo do editor">
+                    <button
+                        type="button"
+                        data-editor-mode="edit"
+                        class="markdown-mode active"
+                        aria-pressed="true"
+                    >
+                        Editar
+                    </button>
+
+                    <button
+                        type="button"
+                        data-editor-mode="preview"
+                        class="markdown-mode"
+                        aria-pressed="false"
+                    >
+                        Prévia
+                    </button>
+
+                    <button type="button" class="markdown-mode" data-upload-markdown>
+                        Importar Markdown
+                    </button>
+                    <input
+                        type="file"
+                        accept=".md,.markdown,text/markdown"
+                        data-markdown-file
+                        hidden
+                    >
+                </div>
+                <small data-markdown-upload-status role="status" aria-live="polite"></small>
+
+                <div class="markdown-workbench" data-mode="edit">
+                    {{ form.content }}
+                    <aside class="markdown-preview post-content" aria-live="polite" aria-label="Prévia do post">
+                        <p class="markdown-preview-empty">A prévia aparecerá aqui enquanto você escreve.</p>
+                    </aside>
+                </div>
+                <small>Escreva o texto em Markdown. Use # para títulos, ``` para blocos de código e - para listas.</small>
+                {% if form.content.errors %}
+                    <span class="field-error">{{ form.content.errors|striptags }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <a class="dashboard-secondary-button" href="{% url 'dashboard:index' %}">Cancelar</a>
+                <button class="dashboard-primary-button" type="submit">
+                    {% block submit_label %}Publicar post{% endblock %}
+                </button>
+            </div>
+        </div>
+
+        <aside class="create-post-sidebar" aria-label="Configurações da publicação">
+            <section class="post-settings-card form-field">
+                <label for="{{ form.image.id_for_label }}">Imagem</label>
+                <label class="post-image-picker" for="{{ form.image.id_for_label }}">
+                    <span class="post-image-placeholder{% if post.image %} is-hidden{% endif %}" data-image-placeholder>
+                        <span aria-hidden="true">＋</span>
+                        Escolha uma imagem
+                    </span>
+                    <img
+                        class="post-image-preview-image{% if not post.image %} is-empty{% endif %}"
+                        data-image-preview
+                        src="{% if post.image %}{{ post.image.url }}{% endif %}"
+                        alt="{% if post.image %}Imagem atual de {{ post.title }}{% else %}Prévia da imagem selecionada{% endif %}"
+                    >
+                    {{ form.image }}
+                </label>
+                <small>Opcional. JPG, PNG ou WebP.</small>
+                {% if form.image.errors %}
+                    <span class="field-error">{{ form.image.errors|striptags }}</span>
+                {% endif %}
+            </section>
+
+            <section class="post-settings-card form-field status-fieldset">
+                <span class="form-field-label">Status</span>
+                <div class="status-options">
+                    {% for radio in form.status %}
+                        <label class="status-option" for="{{ radio.id_for_label }}">
+                            {{ radio.tag }}
+                            <span>{{ radio.choice_label }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
                 {% if form.status.errors %}
                     <span class="field-error">{{ form.status.errors|striptags }}</span>
                 {% endif %}
-            </div>
-        </div>
-
-        <div class="form-field">
-            <label for="{{ form.content.id_for_label }}">Conteúdo</label>
-            <div class="markdown-toolbar" role="toolbar" aria-label="Modo do editor">
-                <button
-                    type="button"
-                    data-editor-mode="edit"
-                    class="markdown-mode active"
-                    aria-pressed="true"
-                >
-                    Editar
-                </button>
-
-                <button
-                    type="button"
-                    data-editor-mode="preview"
-                    class="markdown-mode"
-                    aria-pressed="false"
-                >
-                    Prévia
-                </button>
-
-                <button type="button" class="markdown-mode" data-upload-markdown>
-                    Importar Markdown
-                </button>
-                <input
-                    type="file"
-                    accept=".md,.markdown,text/markdown"
-                    data-markdown-file
-                    hidden
-                >
-            </div>
-            <small data-markdown-upload-status role="status" aria-live="polite"></small>
-
-            <div class="markdown-workbench" data-mode="edit">
-                {{ form.content }}
-                <aside class="markdown-preview post-content" aria-live="polite" aria-label="Prévia do post">
-                    <p class="markdown-preview-empty">A prévia aparecerá aqui enquanto você escreve.</p>
-                </aside>
-            </div>
-            <small>Escreva o texto em Markdown. Use # para títulos, ``` para blocos de código e - para listas.</small>
-            {% if form.content.errors %}
-                <span class="field-error">{{ form.content.errors|striptags }}</span>
-            {% endif %}
-        </div>
-
-        <div class="form-actions">
-            <a class="dashboard-secondary-button" href="{% url 'dashboard:index' %}">Cancelar</a>
-            <button class="dashboard-primary-button" type="submit">
-                {% block submit_label %}Publicar post{% endblock %}
-            </button>
-        </div>
+            </section>
+        </aside>
     </form>
 
-    <script>
-        window.MARKDOWN_PREVIEW_URL = "{% url 'dashboard:preview_post' %}";
-    </script>
+    <script src="{% static 'blog/dist/create-post.js' %}" type="module"></script>
     <script src="{% static 'blog/dist/markdown-editor.js' %}" type="module"></script>
 {% endblock %}
 

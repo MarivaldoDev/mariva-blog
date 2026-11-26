@@ -35,7 +35,7 @@ class PostForm(forms.ModelForm):
             ),
             "content": forms.Textarea(attrs={"class": "form-control", "rows": 18}),
             "category": forms.Select(attrs={"class": "form-control"}),
-            "status": forms.Select(attrs={"class": "form-control"}),
+            "status": forms.RadioSelect(attrs={"class": "status-radio"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -59,6 +59,6 @@ class PostForm(forms.ModelForm):
             if self.instance.pk:
                 duplicate_titles = duplicate_titles.exclude(pk=self.instance.pk)
             if duplicate_titles.exists():
-                raise forms.ValidationError("A post with this title already exists.")
+                raise forms.ValidationError("Um post com este título já existe.")
 
         return cleaned_data
