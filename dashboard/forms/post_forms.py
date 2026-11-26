@@ -8,13 +8,45 @@ from blog.models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields: ClassVar[list[str]] = ["title", "content", "category"]
+        fields: ClassVar[list[str]] = [
+            "image",
+            "title",
+            "content",
+            "category",
+            "status",
+        ]
+        labels: ClassVar[dict[str, str]] = {
+            "image": "Imagem",
+            "title": "Título",
+            "content": "Conteúdo",
+            "category": "Categoria",
+            "status": "Status",
+        }
 
         widgets: ClassVar[dict[str, forms.Widget]] = {
-            "title": forms.TextInput(attrs={"class": "form-control"}),
-            "content": forms.Textarea(attrs={"class": "form-control"}),
+            "image": forms.FileInput(
+                attrs={"class": "form-control", "accept": "image/*"}
+            ),
+            "title": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Digite o título do post",
+                }
+            ),
+            "content": forms.Textarea(attrs={"class": "form-control", "rows": 18}),
             "category": forms.Select(attrs={"class": "form-control"}),
+            "status": forms.Select(attrs={"class": "form-control"}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        status_field = self.fields["status"]
+        if not isinstance(status_field, forms.ChoiceField):
+            raise TypeError("O campo status precisa ser um ChoiceField.")
+        status_field.choices = [
+            (Post.Status.DRAFT, "Rascunho"),
+            (Post.Status.PUBLISHED, "Publicado"),
+        ]
 
     def clean(self) -> dict[str, str]:
         cleaned_data = super().clean()

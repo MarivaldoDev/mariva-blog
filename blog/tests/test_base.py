@@ -13,10 +13,17 @@ class TestBase(TestCase):
         content: str = "Conteúdo do primeiro post",
         slug: str | None = None,
         category: Category | None = None,
+        image: str | None = None,
+        status: Post.Status = Post.Status.DRAFT,
     ) -> Post:
 
         if category is None:
             category = self.make_category()
         return Post.objects.create(
-            title=title, content=content, category=category, slug=slug
+            title=title,
+            content=content,
+            category=category,
+            slug=slug,
+            image=image,
+            status=status,
         )

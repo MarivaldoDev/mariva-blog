@@ -43,7 +43,7 @@ def index(request):
 @staff_member_required
 def create_post(request):
     if request.method == "POST":
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save()
             messages.success(request, f'Post "{post.title}" criado com sucesso.')
@@ -73,7 +73,7 @@ def preview_post(request) -> JsonResponse:
 def update_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
     if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
+        form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
             messages.success(request, f'Post "{post.title}" atualizado com sucesso.')

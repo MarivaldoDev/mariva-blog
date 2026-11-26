@@ -28,8 +28,22 @@
         </div>
     {% endif %}
 
-    <form class="create-post-form" action="{% block form_action %}{% url 'dashboard:create_post' %}{% endblock %}" method="post">
+    <form class="create-post-form" action="{% block form_action %}{% url 'dashboard:create_post' %}{% endblock %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+
+        <div class="form-field">
+            <label for="{{ form.image.id_for_label }}">Imagem</label>
+            {% if post.image %}
+                <div class="post-image-preview">
+                    <img src="{{ post.image.url }}" alt="Imagem atual de {{ post.title }}">
+                </div>
+            {% endif %}
+            {{ form.image }}
+            <small>Opcional. Selecione uma imagem em formato JPG, PNG ou WebP.</small>
+            {% if form.image.errors %}
+                <span class="field-error">{{ form.image.errors|striptags }}</span>
+            {% endif %}
+        </div>
 
         <div class="form-field">
             <label for="{{ form.title.id_for_label }}">Título</label>
@@ -39,12 +53,22 @@
             {% endif %}
         </div>
 
-        <div class="form-field">
-            <label for="{{ form.category.id_for_label }}">Categoria</label>
-            {{ form.category }}
-            {% if form.category.errors %}
-                <span class="field-error">{{ form.category.errors|striptags }}</span>
-            {% endif %}
+        <div class="form-field-grid">
+            <div class="form-field">
+                <label for="{{ form.category.id_for_label }}">Categoria</label>
+                {{ form.category }}
+                {% if form.category.errors %}
+                    <span class="field-error">{{ form.category.errors|striptags }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-field">
+                <label for="{{ form.status.id_for_label }}">Status</label>
+                {{ form.status }}
+                {% if form.status.errors %}
+                    <span class="field-error">{{ form.status.errors|striptags }}</span>
+                {% endif %}
+            </div>
         </div>
 
         <div class="form-field">

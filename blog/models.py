@@ -16,6 +16,10 @@ class Category(models.Model):
 
 
 class Post(models.Model):
+    class Status(models.TextChoices):
+        DRAFT = "draft", "Draft"
+        PUBLISHED = "published", "Published"
+
     title = models.CharField(max_length=200)
     slug = AutoSlugField(
         populate_from="title",
@@ -26,6 +30,12 @@ class Post(models.Model):
     content = models.TextField()
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="posts"
+    )
+    image = models.ImageField(upload_to="posts/", null=True, blank=True)
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.DRAFT,
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

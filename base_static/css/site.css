@@ -189,6 +189,9 @@ a { color: inherit; text-decoration: none; }
 .dashboard-alert-error { background: #241318; border-color: #5e2936; color: #f0a8b7; }
 .create-post-form { background: var(--dashboard-surface); border: 1px solid var(--dashboard-line); border-radius: 9px; margin: 18px 0 70px; padding: 26px; }
 .form-field { display: flex; flex-direction: column; margin-bottom: 22px; }
+.form-field-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.post-image-preview { border: 1px solid #2a2933; border-radius: 6px; margin-bottom: 10px; max-height: 220px; overflow: hidden; }
+.post-image-preview img { display: block; max-height: 220px; object-fit: cover; width: 100%; }
 .form-field label { color: #c9c6d3; font-size: .72rem; font-weight: 700; margin-bottom: 8px; }
 .form-field input, .form-field select, .form-field textarea { background: #09090d; border: 1px solid #2a2933; border-radius: 5px; color: var(--dashboard-text); font: inherit; width: 100%; }
 .form-field input, .form-field select { height: 42px; padding: 0 12px; }
@@ -238,6 +241,7 @@ a { color: inherit; text-decoration: none; }
     .dashboard-post-actions { grid-column: 1 / -1; justify-content: flex-start; }
     .create-post-heading { flex-direction: column-reverse; }
     .create-post-form { margin-top: 24px; padding: 20px; }
+    .form-field-grid { grid-template-columns: 1fr; }
     .form-field textarea { min-height: 300px; }
     .markdown-workbench, .markdown-workbench[data-mode="split"] { grid-template-columns: 1fr; }
     .markdown-workbench[data-mode="split"] .markdown-preview { border-left: 0; border-top: 1px solid #cfd8d3; max-height: 500px; }
