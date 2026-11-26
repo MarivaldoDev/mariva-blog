@@ -113,6 +113,54 @@ function setupMarkdownPreview(textarea, editor) {
     });
 }
 
+function setupMarkdownImport(editor) {
+    const uploadButton = document.querySelector("[data-upload-markdown]");
+    const fileInput = document.querySelector("[data-markdown-file]");
+    const status = document.querySelector("[data-markdown-upload-status]");
+
+    if (
+        !uploadButton
+        || !(fileInput instanceof HTMLInputElement)
+        || !(status instanceof HTMLElement)
+    ) {
+        return;
+    }
+
+    uploadButton.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", async () => {
+        const file = fileInput.files?.[0];
+        if (!file) {
+            return;
+        }
+
+        try {
+            if (!/\.(md|markdown)$/i.test(file.name)) {
+                throw new Error("Selecione um arquivo .md ou .markdown.");
+            }
+
+            const content = await file.text();
+            editor.dispatch({
+                changes: {
+                    from: 0,
+                    to: editor.state.doc.length,
+                    insert: content,
+                },
+            });
+
+            document.querySelector('[data-editor-mode="edit"]')?.click();
+            editor.focus();
+            status.textContent = `Arquivo "${file.name}" importado.`;
+        } catch (error) {
+            status.textContent = error instanceof Error
+                ? error.message
+                : "Não foi possível ler o arquivo Markdown.";
+        } finally {
+            fileInput.value = "";
+        }
+    });
+}
+
 function initializeMarkdownEditor() {
     const textarea = document.querySelector(
         'textarea[name="content"]'
@@ -144,6 +192,7 @@ function initializeMarkdownEditor() {
     });
 
     setupMarkdownPreview(textarea, editor);
+    setupMarkdownImport(editor);
 
     textarea.dataset.codemirrorInitialized = "true";
     textarea.style.display = "none";

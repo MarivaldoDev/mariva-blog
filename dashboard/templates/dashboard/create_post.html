@@ -91,7 +91,18 @@
                 >
                     Prévia
                 </button>
+
+                <button type="button" class="markdown-mode" data-upload-markdown>
+                    Importar Markdown
+                </button>
+                <input
+                    type="file"
+                    accept=".md,.markdown,text/markdown"
+                    data-markdown-file
+                    hidden
+                >
             </div>
+            <small data-markdown-upload-status role="status" aria-live="polite"></small>
 
             <div class="markdown-workbench" data-mode="edit">
                 {{ form.content }}
