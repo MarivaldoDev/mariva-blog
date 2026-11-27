@@ -6,7 +6,11 @@ from .models import Category, Post
 
 
 def home(request: HttpRequest) -> HttpResponse:
-    last_posts = Post.objects.select_related("category").order_by("-created_at")[:12]
+    last_posts = (
+        Post.objects.select_related("category")
+        .filter(status="published")
+        .order_by("-created_at")[:12]
+    )
     categories = Category.objects.order_by("name").annotate(post_count=Count("posts"))
     return render(
         request,
