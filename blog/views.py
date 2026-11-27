@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
 
@@ -11,7 +11,17 @@ def home(request: HttpRequest) -> HttpResponse:
         .filter(status="published")
         .order_by("-created_at")[:12]
     )
-    categories = Category.objects.order_by("name").annotate(post_count=Count("posts"))
+    categories = (
+        Category.objects.annotate(
+            post_count=Count(
+                "posts",
+                filter=Q(posts__status=Post.Status.PUBLISHED),
+            )
+        )
+        .filter(post_count__gt=0)
+        .order_by("name")
+    )
+
     return render(
         request,
         "home.html",
