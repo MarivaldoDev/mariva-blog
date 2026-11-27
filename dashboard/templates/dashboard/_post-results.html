@@ -13,6 +13,7 @@
             <div class="dashboard-table-header" aria-hidden="true">
                 <span>Título</span>
                 <span>Categoria</span>
+                <span>Status</span>
                 <span>Atualizado</span>
                 <span>Ações</span>
             </div>
@@ -23,6 +24,9 @@
                         <small>{{ post.created_at|date:"d/m/Y" }}</small>
                     </a>
                     <span class="dashboard-category">{{ post.category.name }}</span>
+                    <span class="dashboard-post-status">
+                        {% if post.status == "published" %}Publicado{% else %}Rascunho{% endif %}
+                    </span>
                     <time datetime="{{ post.updated_at|date:'c' }}">{{ post.updated_at|timesince }} atrás</time>
                     <div class="dashboard-post-actions">
                         <a
@@ -73,8 +77,8 @@
             {% if page_obj.has_previous %}
                 <a
                     class="dashboard-pagination-button"
-                    href="?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}page={{ page_obj.previous_page_number }}"
-                    hx-get="{% url 'dashboard:index' %}?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}page={{ page_obj.previous_page_number }}"
+                    href="?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status != 'all' %}status={{ status }}&amp;{% endif %}page={{ page_obj.previous_page_number }}"
+                    hx-get="{% url 'dashboard:index' %}?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status != 'all' %}status={{ status }}&amp;{% endif %}page={{ page_obj.previous_page_number }}"
                     hx-target="#dashboard-post-results"
                     hx-swap="innerHTML"
                     hx-push-url="true"
@@ -91,8 +95,8 @@
                 {% else %}
                     <a
                         class="dashboard-pagination-button"
-                        href="?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}page={{ page_number }}"
-                        hx-get="{% url 'dashboard:index' %}?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}page={{ page_number }}"
+                        href="?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status != 'all' %}status={{ status }}&amp;{% endif %}page={{ page_number }}"
+                        hx-get="{% url 'dashboard:index' %}?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status != 'all' %}status={{ status }}&amp;{% endif %}page={{ page_number }}"
                         hx-target="#dashboard-post-results"
                         hx-swap="innerHTML"
                         hx-push-url="true"
@@ -105,8 +109,8 @@
             {% if page_obj.has_next %}
                 <a
                     class="dashboard-pagination-button"
-                    href="?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}page={{ page_obj.next_page_number }}"
-                    hx-get="{% url 'dashboard:index' %}?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}page={{ page_obj.next_page_number }}"
+                    href="?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status != 'all' %}status={{ status }}&amp;{% endif %}page={{ page_obj.next_page_number }}"
+                    hx-get="{% url 'dashboard:index' %}?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status != 'all' %}status={{ status }}&amp;{% endif %}page={{ page_obj.next_page_number }}"
                     hx-target="#dashboard-post-results"
                     hx-swap="innerHTML"
                     hx-push-url="true"

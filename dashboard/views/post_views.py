@@ -15,12 +15,20 @@ from ..forms.post_forms import PostForm
 @staff_member_required
 def index(request):
     search_query = request.GET.get("q", "").strip()
+    status = request.GET.get("status", "all")
+    if status not in {"all", Post.Status.PUBLISHED, Post.Status.DRAFT}:
+        status = "all"
     posts = Post.objects.select_related("category").order_by("-created_at")
 
     if search_query:
         posts = posts.filter(
             Q(title__icontains=search_query) | Q(category__name__icontains=search_query)
         )
+
+    if status == "published":
+        posts = posts.filter(status=Post.Status.PUBLISHED)
+    elif status == "draft":
+        posts = posts.filter(status=Post.Status.DRAFT)
 
     paginator = Paginator(posts, 6)
     page_obj = paginator.get_page(request.GET.get("page"))
@@ -32,6 +40,7 @@ def index(request):
         "search_query": search_query,
         "displayed_post_count": posts.count(),
         "page_obj": page_obj,
+        "status": status,
     }
 
     if request.headers.get("HX-Request"):
